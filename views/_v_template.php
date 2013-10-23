@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<header>Where runners come together</header>
 	<title><?php if(isset($title)) echo $title; ?></title>
-
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
 					
 	<!-- Controller Specific JS/CSS -->
