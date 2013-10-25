@@ -63,6 +63,10 @@
  		padding-right:20px;
 	}
 	
+	li{
+		display:inline;
+	}
+	
 	p, ol, ul
 	{
 		margin-top: 0;
@@ -419,6 +423,8 @@
 
 	#menu
 	{
+		margin:0;
+		padding:0;
 	}
 	
 	#menu ul

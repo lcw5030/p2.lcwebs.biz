@@ -70,31 +70,41 @@ class users_controller extends base_controller {
     
     public function p_login() {
                       
-                $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
-                
-                //echo "<pre>";
-                //print_r($_POST);
-                //echo "</pre>";
+        # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
+        $_POST = DB::instance(DB_NAME)->sanitize($_POST);
 
-                $q = 
-                        'SELECT token 
-                        FROM users
-                        WHERE email = "'.$_POST['email'].'"
-                        AND password = "'.$_POST['password'].'"';
-                        
-                        //echo $q;
-           
-                $token = DB::instance(DB_NAME)->select_field($q);
-                
-                # Success
-                if($token) {
-                        setcookie('token',$token, strtotime('+1 year'), '/');
-                        $this->template->content = View::instance('v_users_profile');            
-                        echo $this->template;   
-                }
-                # Fail
+        # Hash submitted password so we can compare it against one in the db
+        $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+
+        # Search the db for this email and password
+        # Retrieve the token if it's available
+        $q = "SELECT token 
+            FROM users 
+            WHERE email = '".$_POST['email']."' 
+            AND password = '".$_POST['password']."'";
+
+        $token = DB::instance(DB_NAME)->select_field($q);
+
+        # If we didn't find a matching token in the database, it means login failed
+        if(!$token) {
+                        Router::redirect('/users/login_fail');  
+                    }
+        
+        # But if we did, login succeeded!
                 else {
-                        Router::redirect('/users/login_fail');
+                        /* 
+                    Store this token in a cookie using setcookie()
+                    Important Note: *Nothing* else can echo to the page before setcookie is called
+                    Not even one single white space.
+                    param 1 = name of the cookie
+                    param 2 = the value of the cookie
+                    param 3 = when to expire
+                    param 4 = the path of the cooke (a single forward slash sets it for the entire domain)
+                    */
+                    setcookie("token", $token, strtotime('+1 year'), '/');
+
+                    # Send them to the main page - or whever you want them to go
+                    Router::redirect("/users/profile");
                 }
            
     }
@@ -113,36 +123,23 @@ class users_controller extends base_controller {
             echo "This is the logout page";
         }
 
-        public function profile($user_name = NULL) {
+        public function profile() {
                 
-                # Set up the View
+                # If user is blank, they're not logged in; redirect them to the login page
+                if(!$this->user) {
+                    Router::redirect('/users/login');
+                }
+
+                # If they weren't redirected away, continue:
+
+                # Setup view
                 $this->template->content = View::instance('v_users_profile');
-                $this->template->title = "Profile";
-                
-                # Load client files
-                $client_files_head = Array(
-                        '/css/profile.css',
-                        );
-                
-                $this->template->client_files_head = Utils::load_client_files($client_files_head);
-                
-                $client_files_body = Array(
-                        '/js/profile.js'
-                        );
-                
-                $this->template->client_files_body = Utils::load_client_files($client_files_body);
-                
-                # Pass the data to the View
-                $this->template->content->user_name = $user_name;
-                
-                # Display the view
+                $this->template->title   = "Profile of".$this->user->first_name;
+
+                # Render template
                 echo $this->template;
-                        
-                //$view = View::instance('v_users_profile');
-                //$view->user_name = $user_name;                
-                //echo $view;
-                
-    }
+                            
+                }
 
     
 
