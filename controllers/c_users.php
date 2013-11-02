@@ -29,6 +29,119 @@ class users_controller extends base_controller {
 
     }
 
+    public function editProfile() {
+                    # don't let other users get to profile...
+                    if(!$this->user) {
+                            die("Members only. <a href='/users/login'>Login</a>");
+                    }
+            
+                    #Set up the view
+                $this->template->content = View::instance('v_users_editProfile');
+                $this->template->title = "Edit Profile";
+                
+                # Prepare the data array to be inserted
+                $data = Array(
+                            "first_name" => $this->user->first_name,
+                 "last_name" => $this->user->last_name,
+                 "email" => $this->user->email,
+                 "password" => $this->user->password,
+                 "user_id" => $this->user->user_id
+                 );
+                
+                #Pass the data to the View
+                $this->template->content->user = $data;
+                
+                #Display the view
+                echo $this->template;
+            }
+
+            public function p_editProfile($id) {
+                # this user, not others...and must be logged in, too!
+                if(!$this->user) {
+                        die("Members only. <a href='/users/login'>Login</a>");
+        }
+        
+                # Set up the View
+                $this->template->content = View::instance('v_users_p_editProfile');
+                
+                # Prevent SQL injection attacks by sanitizing the data the user entered in the form
+                $_POST = DB::instance(DB_NAME)->sanitize($_POST);
+            
+                $q = 'SELECT password
+                        FROM users
+                        WHERE user_id = '.$id;
+                    
+                $current_password = DB::instance(DB_NAME)->query($q);
+            
+                # for future use... if I want to allow password to pre-populate or be empty
+                if ($_POST['password'] != ''){
+                    # Encrypt the password (with salt)
+                        $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+                        $_POST['confirm_password'] = sha1(PASSWORD_SALT.$_POST['password']);
+            }
+            
+                unset($_POST['confirm_password']);
+            
+            # set error & same vars to false
+        $error = false;
+        $same = false;
+                
+        # initiate error
+        $this->template->content->error = '<br>';
+        
+                                                                                        
+        #query for matches on this new email address
+        $search_emails = "SELECT user_id FROM users WHERE email = '". $_POST['email']."'";
+        #execute the query
+        $count_q = DB::instance(DB_NAME)->query($search_emails);
+        #get the number of rows where that email exists
+        $email_matches = mysqli_num_rows($count_q);
+        
+                # if we have a match, is it this user?
+                if ($email_matches > 0) {
+                        #get the user_id
+                        $email_user_id = DB::instance(DB_NAME)->select_row($search_emails);
+                        #print_r($email_user_id['user_id']);
+                        #print_r($this->user->user_id);
+
+                        # if the user_id is a match,         
+                        if( $email_user_id['user_id'] == $this->user->user_id) {
+
+                                        #do nothing
+                        }        
+                        # set the error flag.
+                        else {
+                                $error = true;
+                        }
+                }
+                
+                # at some point I need to error check when changing the email address.
+                # Maybe in version 2...
+                if ($error == true) {
+                        $this->template->content = View::instance('v_users_p_editProfile');
+                        $this->template->content->error = 'This email address is already in use by another account.';
+
+                        echo $this->template;
+                }
+            
+                elseif(!$error) {
+                        # Set the modified time
+                        $_POST['modified'] = Time::now();
+                        # be sure to Associate this post with this user
+                        $_POST['user_id'] = $this->user->user_id;
+         
+                        $where_condition = 'WHERE user_id = '.$id;
+     
+                         $updated_post = DB::instance(DB_NAME)->update('users', $_POST, $where_condition);
+                         
+                        # Send them back to the login page.
+                        Router::redirect("/users/profile");
+                }
+                else {
+                        echo $this->template;
+                }
+        }
+
     public function signup() {
         # Setup view
             $this->template->content = View::instance('v_users_signup');
@@ -38,6 +151,20 @@ class users_controller extends base_controller {
             echo $this->template;
 
     }
+
+public function photo() {
+        # Setup view
+            $this->template->content = View::instance('v_users_photo');
+            $this->template->title   = "Photo";
+
+        # Render template
+            echo $this->template;
+
+    }
+
+
+
+
 
     public function p_signup() {
 
@@ -120,7 +247,8 @@ class users_controller extends base_controller {
 
     
         public function logout() {
-            echo "This is the logout page";
+            #Send user back to the login page
+            Router::redirect('/users/login');
         }
 
         public function profile() {
