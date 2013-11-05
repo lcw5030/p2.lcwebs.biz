@@ -1,5 +1,5 @@
 <div id="mainContent">
-<h3>Check out what other runners are posting and get inspired!</h3>
+    <h3>Check out what other runners are posting and get inspired!</h3>
 <?php foreach($users as $user): ?>
 
     <!-- Print this user's name -->
