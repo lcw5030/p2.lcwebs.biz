@@ -1,3 +1,4 @@
+<div id="mainContent">
 <?php if($user): ?>
         <h2>Edit <?=$user["first_name"]?>'s profile...</h2>
         <br/>
@@ -36,3 +37,4 @@
 <input class="buttons" type='submit' value='Update Profile'>
 
 </form>
+</div>

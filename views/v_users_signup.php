@@ -1,3 +1,4 @@
+<div id="mainContent">
 <form method='POST' action='/users/p_signup'>
 
     First Name<br>
@@ -18,4 +19,21 @@
 
     <input type='submit' value='Sign up'>
 
+    <?php if(isset($error)): ?>
+        <div class='error'>
+            Signup Failed. All fields are required.
+        </div>
+        
+
+    <?php endif; ?>
+
+    <?php if(isset($error) && $error == 'email-exists'): ?>
+        <div class='error'>
+            There is already an account associated with this email. 
+            <a href="/users/login">Login</a>
+        </div>
+        
+
+    <?php endif; ?>
 </form>
+</div>

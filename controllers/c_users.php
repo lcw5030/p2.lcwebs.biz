@@ -142,15 +142,18 @@ class users_controller extends base_controller {
                 }
         }
 
-    public function signup() {
+        public function signup($error = NULL) {
+
         # Setup view
             $this->template->content = View::instance('v_users_signup');
             $this->template->title   = "Sign Up";
 
+        //Pass data to the view
+        $this->template->content->error = $error;
+        
         # Render template
-            echo $this->template;
-
-    }
+        echo $this->template;
+        }
 
 public function photo() {
         # Setup view
@@ -168,29 +171,50 @@ public function photo() {
 
     public function p_signup() {
 
-            # More data we want stored with the user
-            $_POST['created']  = Time::now();
-            $_POST['modified'] = Time::now();
+            //Check input for blank fields
+            foreach($_POST as $field => $value){
+                if(empty($value)) {
+                //If any fields are blank, send error message
+                 Router::redirect('/users/signup/error');  
+                }
+            }   
 
-            # Encrypt the password  
-            $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);                
+            //Check to see if the input email already exists in the database 
+        $exists = DB::instance(DB_NAME)->select_field("SELECT email FROM users WHERE email = '" . $_POST['email'] . "'");
 
-            # Create an encrypted token via their email address and a random string
-            $_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+        //If email already exists
+        if($exists){
 
+             //Redirect to error page
+            Router::redirect('/users/signup/exists');
+        }else{
 
-            # Insert this user into the database
-            $user_id = DB::instance(DB_NAME)->insert('users', $_POST);
+            
+        //Store time data
+        $_POST['created']  = Time::now();
+        $_POST['modified'] = Time::now();
+        
+        //Encrypt PW
+        $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 
-            # Confirm they signed up and show confirmation view
-            $this->template->content = View::instance('v_users_signup_confirm');            
-                echo $this->template; 
-         
+        //Create encrypted string via their email address and a random string
+        $_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+        
+        //Insert user into database
+        DB::instance(DB_NAME)->insert_row('users', $_POST);
+     
+         //redirect to login
+         Router::redirect('/users/login');  
+        } 
     }
 
-    public function login() {
+    public function login($error = NULL) {
         
-                $this->template->content = View::instance('v_users_login');            
+                $this->template->content = View::instance('v_users_login');   
+
+                # Pass data to the view
+                $this->template->content->error = $error;
+
                 echo $this->template;   
            
         }
@@ -214,7 +238,7 @@ public function photo() {
 
         # If we didn't find a matching token in the database, it means login failed
         if(!$token) {
-                        Router::redirect('/users/login_fail');  
+                        Router::redirect('/users/login/error');  
                     }
         
         # But if we did, login succeeded!

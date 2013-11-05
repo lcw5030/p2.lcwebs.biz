@@ -1,3 +1,4 @@
+<div id="mainContent">
 <?php if(!$user): ?>
         <?php Router::redirect("/users/login"); ?>
 <?php else: ?>
@@ -30,3 +31,4 @@
 </div>
 <br>
 <?php endif; ?>
+</div>

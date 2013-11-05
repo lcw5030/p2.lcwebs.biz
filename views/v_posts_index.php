@@ -1,3 +1,4 @@
+<div id="mainContent">
 <?php foreach($posts as $post): ?>
 
 <article>
@@ -13,3 +14,4 @@
 </article>
 
 <?php endforeach; ?>
+</div>

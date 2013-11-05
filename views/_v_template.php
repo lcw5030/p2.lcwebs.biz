@@ -18,6 +18,7 @@
 <body>	
 	<nav>
                 <menu>
+                        <div id="navigation">
                         <?php if($user): ?>
                                 <li><a href='/users/profile'>View Profile</a></li>
                                 <li><a href='/posts/add'>Add Post</a></li>
@@ -28,6 +29,7 @@
                                 <li><a href='/users/signup'>Sign up</a></li>
                                 <li><a href='/users/login'>Log in</a></li>
                         <?php endif; ?>
+                        </div>
                 </menu>
     </nav>
 

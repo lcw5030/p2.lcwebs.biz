@@ -2,11 +2,17 @@
 	{
 		height: 100%;
 	}
+
+	.error
+	{
+	color: #A80000;
+	font-weight: bold;
+	}
 	
 	header{
-		background: #000099;
+		background: #000000;
 		line-height: -14%;
-		height: 15%;
+		height: 10%;
 		background-image:url(RunSpot_logo.png);
 		background-repeat:no-repeat;
 		background-size: 10.5%;
@@ -21,13 +27,32 @@
 	}
 	head
 	{
-		margin: 0px;
 		padding: 0px;
 		background: #CC3366;
 		font-family: 'Source Sans Pro', sans-serif;
 		font-size: 12pt;
 		font-weight: 400;
 		color: #000000;
+	}
+
+	#navigation
+	{
+		margin-left:auto;
+    		margin-right:auto;
+	}
+
+	#mainContent{
+    		padding: 20px;
+		width:1500px;
+    		height:auto;
+		background: #FFFFFF;
+    		min-height:270px;
+    		/* Set the main content container to the center of the page*/
+    		margin-left: auto;
+    		margin-right:auto;
+		box-shadow: 20px 20px 20px #000000;
+		-moz-border-radius: 15px;
+		border-radius: 15px;
 	}
 
 	body
@@ -39,7 +64,11 @@
 		font-size: 12pt;
 		font-weight: 400;
 		color: #000000;
+		background-image:url(RunSpotPanoramic.jpg);
+		background-size: 100% 100%;
+		background-repeat:no-repeat;
 	}
+	
 	
 	h1, h2, h3
 	{

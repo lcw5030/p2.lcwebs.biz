@@ -1,3 +1,4 @@
+<div id="mainContent">
 <?php if(!$user): ?>
         <?php Router::redirect("/users/login"); ?>
 <?php else: ?>
@@ -44,3 +45,4 @@
         <h2>
                 Why not follow someone? <a href='/posts/users'>Other Posters</a>
         </h2>
+</div>
