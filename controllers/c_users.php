@@ -252,21 +252,33 @@ public function photo() {
         }
 
         public function profile() {
-                
-                # If user is blank, they're not logged in; redirect them to the login page
-                if(!$this->user) {
-                    Router::redirect('/users/login');
-                }
-
-                # If they weren't redirected away, continue:
-
-                # Setup view
-                $this->template->content = View::instance('v_users_profile');
-                $this->template->title   = "Profile of".$this->user->first_name;
-
-                # Render template
-                echo $this->template;
+                                if(!$this->user) {
+                            die("Members only. <a href='/users/login'>Login</a>");
+                        }
+                    
+                            #Set up the view
+                            $this->template->content = View::instance('v_users_profile');
+                            $this->template->title = "Profile";
                             
+                            # Build the query
+                            $q = 'SELECT
+                posts.content,
+                posts.created,
+                posts.post_id
+                                FROM posts
+                WHERE posts.user_id = '.$this->user->user_id.'
+                ORDER BY posts.created DESC' ;
+
+                            # Run the query
+                            $posts = DB::instance(DB_NAME)->select_rows($q);
+
+                            # Pass data to the View
+                            $this->template->content->posts = $posts;         
+                            
+                            #Display the view
+                            echo $this->template;
+                                
+                                            
                 }
 
     
