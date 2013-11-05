@@ -177,8 +177,6 @@ class users_controller extends base_controller
     
     
     
-    
-    
     public function p_signup()
     {
         
@@ -298,7 +296,7 @@ class users_controller extends base_controller
 
         # Delete their token cookie by setting it to a date in the past - effectively logging them out
         setcookie("token", "", strtotime('-1 year'), '/');
-        
+
         #Send user back to the login page
         Router::redirect('/users/login');
     }

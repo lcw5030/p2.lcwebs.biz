@@ -17,8 +17,6 @@
         <input type='password' name='password'>
         <br><br>
 
-        <input type='submit' value='Sign up'>
-
         <?php if(isset($error)): ?>
             <div class='error'>
                 Signup Failed. All fields are required.
@@ -35,5 +33,7 @@
             
 
         <?php endif; ?>
+
+        <input type='submit' value='Sign up'>
     </form>
 </div>

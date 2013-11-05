@@ -37,4 +37,8 @@
 
 	<?php if(isset($client_files_body)) echo $client_files_body; ?>
 </body>
+    <footer>
+        RunSpot is an application for Harvard Extension CSCI E-15 built by Lisa Weber</br>
+        Photo credit belongs to http://parrotheadjeff.com/
+    </footer>
 </html>
