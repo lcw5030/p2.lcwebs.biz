@@ -38,6 +38,7 @@
                         </time>
                 
                         <a href='/posts/edit/<?=$post['post_id']; ?>' >Edit this post</a>
+                        <a href='/posts/edit/<?=$post['post_id']; ?>' >Delete this post</a>
                 </h3>
                 </article>
                 <br/>

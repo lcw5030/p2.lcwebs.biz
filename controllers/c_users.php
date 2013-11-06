@@ -159,7 +159,7 @@ class users_controller extends base_controller
         
         //Pass data to the view
         $this->template->content->error = $error;
-        
+
         # Render template
         echo $this->template;
     }

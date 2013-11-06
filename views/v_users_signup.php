@@ -17,7 +17,7 @@
         <input type='password' name='password'>
         <br><br>
 
-        <?php if(isset($error)): ?>
+        <?php if(isset($error) && $error == 'error'): ?>
             <div class='error'>
                 Signup Failed. All fields are required.
             </div>
@@ -25,7 +25,7 @@
 
         <?php endif; ?>
 
-        <?php if(isset($error) && $error == 'email-exists'): ?>
+        <?php if(isset($error) && $error == 'exists'): ?>
             <div class='error'>
                 There is already an account associated with this email. 
                 <a href="/users/login">Login</a>

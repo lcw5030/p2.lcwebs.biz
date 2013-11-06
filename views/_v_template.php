@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<div id="wrapper">
 <head>
 	<header>Where runners come together</header>
 	<title><?php if(isset($title)) echo $title; ?></title>
@@ -37,8 +38,9 @@
 
 	<?php if(isset($client_files_body)) echo $client_files_body; ?>
 </body>
-    <footer>
+<footer>
         RunSpot is an application for Harvard Extension CSCI E-15 built by Lisa Weber</br>
-        Photo credit belongs to http://parrotheadjeff.com/
-    </footer>
+        Photo credit belongs to http://parrotheadjeff.com/ 
+</footer>
+</div>
 </html>
